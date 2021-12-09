@@ -533,7 +533,7 @@ RUN cd /tmp \
     && rm -rf /backup/.etc \
     && rm -rf /tmp/* \
     && apt-get -yf autoremove \
-    && apt-get clean 
+    && apt-get clean \
 
 #nginx
     && cd tmp/ \
