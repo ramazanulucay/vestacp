@@ -14,10 +14,7 @@ RUN cd /tmp \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 91FA4AD5 \
     && add-apt-repository ppa:deadsnakes/ppa \
     && add-apt-repository ppa:maxmind/ppa -y \
-    && echo "nginx mysql bind clamav ssl-cert dovecot dovenull Debian-exim 
-    
-    
-    debian-spamd epmd couchdb memcache mongodb redis" | xargs -n1 groupadd -K GID_MIN=100 -K GID_MAX=999 ${g} \
+    && echo "nginx mysql bind clamav ssl-cert dovecot dovenull Debian-exim postgres debian-spamd epmd couchdb memcache mongodb redis" | xargs -n1 groupadd -K GID_MIN=100 -K GID_MAX=999 ${g} \
     && echo "nginx nginx mysql mysql bind bind clamav clamav dovecot dovecot dovenull dovenull Debian-exim Debian-exim postgres postgres debian-spamd debian-spamd epmd epmd couchdb couchdb memcache memcache mongodb mongodb redis redis" | xargs -n2 useradd -d /nonexistent -s /bin/false -K UID_MIN=100 -K UID_MAX=999 -g ${g} \
     && usermod -d /var/lib/mysql mysql \
     && usermod -d /var/cache/bind bind \
