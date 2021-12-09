@@ -14,7 +14,10 @@ RUN cd /tmp \
     && apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 91FA4AD5 \
     && add-apt-repository ppa:deadsnakes/ppa \
     && add-apt-repository ppa:maxmind/ppa -y \
-    && echo "nginx mysql bind clamav ssl-cert dovecot dovenull Debian-exim postgres debian-spamd epmd couchdb memcache mongodb redis" | xargs -n1 groupadd -K GID_MIN=100 -K GID_MAX=999 ${g} \
+    && echo "nginx mysql bind clamav ssl-cert dovecot dovenull Debian-exim 
+    
+    
+    debian-spamd epmd couchdb memcache mongodb redis" | xargs -n1 groupadd -K GID_MIN=100 -K GID_MAX=999 ${g} \
     && echo "nginx nginx mysql mysql bind bind clamav clamav dovecot dovecot dovenull dovenull Debian-exim Debian-exim postgres postgres debian-spamd debian-spamd epmd epmd couchdb couchdb memcache memcache mongodb mongodb redis redis" | xargs -n2 useradd -d /nonexistent -s /bin/false -K UID_MIN=100 -K UID_MAX=999 -g ${g} \
     && usermod -d /var/lib/mysql mysql \
     && usermod -d /var/cache/bind bind \
@@ -28,7 +31,7 @@ RUN cd /tmp \
     && usermod -d /var/lib/mongodb -a -G nogroup mongodb \
     && usermod -d /var/lib/redis redis \
     && add-apt-repository "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" \
-    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add - \
+    && wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc --no-check-certificate | sudo apt-key add - \
     && add-apt-repository ppa:ubuntugis/ubuntugis-unstable \
     && curl -sL "https://github.com/simplresty/ngx_devel_kit/archive/v$NGINX_DEVEL_KIT_VERSION.tar.gz" -o dev-kit.tar.gz \
     && mkdir -p /usr/src/nginx/ngx_devel_kit \
@@ -77,6 +80,7 @@ RUN cd /tmp \
         php7.3-tidy php7.3-opcache php7.3-json php7.3-bz2 php7.3-pgsql php7.3-readline php7.3-imagick php7.3-phar \
         php7.3-intl php7.3-sqlite3 php7.3-ldap php7.3-xml php7.3-redis php7.3-fpm \
         php7.3-soap php7.3-bcmath php7.3-fileinfo php7.3-xdebug php7.3-exif php7.3-tokenizer \
+    && apt-get install -yq install build-essential zlib1g-dev libpcre3 libpcre3-dev unzip libssl-dev \
 
 # put nginx on hold so it doesn't get updates with apt-get upgrade, also remove from vesta apt-get
     && apt-mark hold nginx \
@@ -532,7 +536,18 @@ RUN cd /tmp \
     && rm -rf /backup/.etc \
     && rm -rf /tmp/* \
     && apt-get -yf autoremove \
-    && apt-get clean 
+    && apt-get clean \
+
+#nginx
+    && cd tmp/ \
+    && wget https://github.com/kaltura/nginx-vod-module/archive/master.zip \
+    && unzip master.zip \
+    && wget http://nginx.org/download/nginx-1.21.4.tar.gz \
+    && tar -zxvf nginx-1.21.4.tar.gz  \
+    && cd nginx-1.21.4 \
+    && ./configure --prefix=/etc/nginx --sbin-path=/usr/sbin/nginx --add-module=/tmp/nginx-vod-module-master --modules-path=/usr/lib/nginx/modules --conf-path=/etc/nginx/nginx.conf --error-log-path=/var/log/nginx/error.log --http-log-path=/var/log/nginx/access.log --pid-path=/var/run/nginx.pid --lock-path=/var/run/nginx.lock --http-client-body-temp-path=/var/cache/nginx/client_temp --http-proxy-temp-path=/var/cache/nginx/proxy_temp --http-fastcgi-temp-path=/var/cache/nginx/fastcgi_temp --http-uwsgi-temp-path=/var/cache/nginx/uwsgi_temp --http-scgi-temp-path=/var/cache/nginx/scgi_temp --user=nginx --group=nginx --with-compat --with-file-aio --with-threads --with-http_addition_module --with-http_auth_request_module --with-http_dav_module --with-http_flv_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_mp4_module --with-http_random_index_module --with-http_realip_module --with-http_secure_link_module --with-http_slice_module --with-http_ssl_module --with-http_stub_status_module --with-http_sub_module --with-http_v2_module --with-mail --with-mail_ssl_module --with-stream --with-stream_realip_module --with-stream_ssl_module --with-stream_ssl_preread_module \
+    && make \
+    && make install
 
 VOLUME ["/vesta", "/home", "/backup"]
 
