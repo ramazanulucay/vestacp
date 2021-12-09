@@ -44,7 +44,7 @@ RUN cd /tmp \
     && echo "deb-src http://nginx.org/packages/ubuntu/ xenial nginx" | tee -a /etc/apt/sources.list \
     && apt-get update && apt-get -yf -o Dpkg::Options::="--force-confold"  --no-install-recommends upgrade \
     && curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - \
-    && apt-get install -yf -o Dpkg::Options::="--force-confold" --no-install-recommends libpcre3-dev libssl-dev dpkg-dev libmaxminddb0 libmaxminddb-dev mmdb-bin libgd-dev iproute uuid-dev pwgen \
+    && apt-get install -yf -o Dpkg::Options::="--force-confold" --no-install-recommends  build-essential zlib1g-dev libpcre3 libpcre3-dev unzip libssl-dev libpcre3-dev libssl-dev dpkg-dev libmaxminddb0 libmaxminddb-dev mmdb-bin libgd-dev iproute uuid-dev pwgen \
     && mkdir -p ${NGINX_BUILD_DIR} \
     && cd ${NGINX_BUILD_DIR} \
     && git clone https://github.com/leev/ngx_http_geoip2_module ngx_http_geoip2_module \
@@ -77,7 +77,6 @@ RUN cd /tmp \
         php7.3-tidy php7.3-opcache php7.3-json php7.3-bz2 php7.3-pgsql php7.3-readline php7.3-imagick php7.3-phar \
         php7.3-intl php7.3-sqlite3 php7.3-ldap php7.3-xml php7.3-redis php7.3-fpm \
         php7.3-soap php7.3-bcmath php7.3-fileinfo php7.3-xdebug php7.3-exif php7.3-tokenizer \
-    && apt-get install -yq install build-essential zlib1g-dev libpcre3 libpcre3-dev unzip libssl-dev \
 
 # put nginx on hold so it doesn't get updates with apt-get upgrade, also remove from vesta apt-get
     && apt-mark hold nginx \
