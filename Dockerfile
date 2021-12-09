@@ -44,8 +44,7 @@ RUN cd /tmp \
     && echo "deb-src http://nginx.org/packages/ubuntu/ xenial nginx" | tee -a /etc/apt/sources.list \
     && apt-get update && apt-get -yf -o Dpkg::Options::="--force-confold"  --no-install-recommends upgrade \
     && curl -sL https://deb.nodesource.com/setup_12.x | sudo -E bash - \
-    && apt-get install -yf -o Dpkg::Options::="--force-confold" --no-install-recommends  build-essential zlib1g-dev libpcre3 libpcre3-dev unzip libssl-dev libpcre3-dev libssl-dev dpkg-dev libmaxminddb0 libmaxminddb-dev mmdb-bin libgd-dev iproute uuid-dev pwgen \
-    && mkdir -p ${NGINX_BUILD_DIR} \
+    && apt-get install -yf -o Dpkg::Options::="--force-confold" --no-install-recommends libpcre3-dev libssl-dev dpkg-dev libmaxminddb0 libmaxminddb-dev mmdb-bin libgd-dev iproute uuid-dev pwgen \    && mkdir -p ${NGINX_BUILD_DIR} \
     && cd ${NGINX_BUILD_DIR} \
     && git clone https://github.com/leev/ngx_http_geoip2_module ngx_http_geoip2_module \
     && apt-get source nginx=${NGINX_VERSION} -y \
